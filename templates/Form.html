@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<head>
+    <title> Sorteo de puntos </title>
+</head>
+<body>
+    <form  action="{{ url_for('data') }}" method="POST" name="data" id="data">
+        <label for="ciudad"> Seleccione una ciudad</label><br>
+        <select name="ciudad" id="ciudad">
+            <option value="Bogota y Soacha">Bogota y Soacha</option>
+            <option value="Medellin y Valle de Aburra" selected>Medellin y Valle de Aburra</option>
+            <option value="Barranquilla y Soledad">Barranquilla y Soledad</option>
+            <option value="Bucaramanga - Floridablanca - Piedecuesta">Bucaramanga - Floridablanca - Piedecuesta</option>
+            <option value="Cartagena" selected>Cartagena</option>
+            <option value="Cali">Cali</option>
+            <option value="Pereira y Dosquebradas">Pereira y Dosquebradas</option>
+        </select><br>
+        <label for="punto1"> Ingrese los puntos de nivel socioeconomico bajo</label><br>
+        <input type="number" name="puntos1" id="puntos1"></input><br>
+        <label for="punto2"> Ingrese los puntos de nivel socioeconomico medio</label><br>
+        <input type="number" name="puntos2" id="puntos2"></input><br>
+        <label for="punto3"> Ingrese los puntos de nivel socioeconomico alto</label><br>
+        <input type="number" name="puntos3" id="puntos3"></input><br>
+        <button> Enviar datos</button>
+    </form>
+</body>
