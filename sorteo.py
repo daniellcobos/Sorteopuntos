@@ -128,7 +128,8 @@ def mainSorteo(ciudad,puntos1,puntos2,puntos3):
     j = j + puntos2
     sortear(df_f,puntos3,ciudad,nse3,j)
     
-    df_puntos.to_csv('Puntos.csv',index = False)
+    df_puntos.to_csv('static/Puntos.csv',index = False)
+    df_puntos.to_excel('static/Puntos.xlsx',index = False)
     dt = df_puntos.to_numpy()
     arreglo = []
     for row in dt:

@@ -1,7 +1,7 @@
 from flask import Flask,request,render_template
 from sorteo import mainSorteo
 
-app = Flask(__name__)
+app = Flask(__name__, static_url_path = '/static')
 
 @app.route('/')
 def form():
@@ -19,7 +19,10 @@ def data():
     # Hace sorteo con los datos del formulario
     
     arreglo=mainSorteo(ciudad,puntos1,puntos2,puntos3)
+    coordenadas = []
+    for punto in arreglo:
+        coordenadas.append([punto[4],punto[5]])
     mensaje = "Sorteo exitoso"
-    return render_template('Form.html',mensaje = mensaje,arreglo=arreglo)
+    return render_template('Form.html',mensaje = mensaje,arreglo=arreglo,coordenadas=coordenadas)
 
 app.run(debug= True)

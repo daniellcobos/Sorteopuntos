@@ -6,6 +6,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.8.1/build/ol.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.8.1/css/ol.css">
+  <style>
+    .map {
+      height: 400px;
+      width: 100%;
+    }
+
+  </style>
 </head>
 <body>
   
@@ -19,7 +28,7 @@
           
         <div class="container mt-5">
           <div class="row">
-            <div class="col-sm-6">
+            <div class="col-sm-4">
                 <form  action="{{ url_for('data') }}" method="POST" name="data" id="data">
                     <label for="ciudad"> Seleccione una ciudad</label><br>
                     <select name="ciudad" id="ciudad">
@@ -40,7 +49,7 @@
                     <button> Enviar datos</button>
                 </form>
             </div>
-            <div class="col-sm-6">
+            <div class="col-sm-4">
                 <h2>{{mensaje}}</h2>
             <ul class="list-group">
                     {% for item in arreglo %}
@@ -50,13 +59,76 @@
                             Longitud: {{item[5]}}, </p>
                     </li>
                     {% endfor %}
-            </ul>
+            </ul> <br>
+            <a href="{{ url_for('static', filename='Puntos.xlsx') }}">Descarga Los Puntos</a>
             </div>
-           
+            <div class="col-sm-4">
+                <h3> Mapa de Puntos</h3>
+                <div id="map" class="map"></div>
+            </div>
           </div>
         </div>
         
         
+        
+        <script type="text/javascript">
+            var data = {{coordenadas|safe}};
+          
+            var iconStyle = new ol.style.Style({
+                image: new ol.style.Icon({
+                    anchor: [0.5, 1],
+                    anchorXUnits: 'fraction',
+                    anchorYUnits: 'fraction',
+                    src: 'https://www.ockert-cnc.de/wp-content/uploads/2016/12/map-marker-icon-300x300.png',
+                    scale: 0.1
+                })
+            });
+    
+            var vectorSource = new ol.source.Vector({
+                features: []
+            });
+    
+            var vectorLayer = new ol.layer.Vector({
+                source: vectorSource
+            });
+    
+    
+            for (point of data){
+                
+                let iconFeature = new ol.Feature({
+                    geometry: new ol.geom.Point([point[1], point[0]]),
+                    name: data.name
+                })
+                console.log(data)
+                console.log(iconFeature.getGeometry().getCoordinates())
+                iconFeature.setStyle(iconStyle)
+                vectorSource.addFeature(iconFeature)
+            
+            }
+        
+    
+       
+    
+            var extent = vectorSource.getExtent();
+            //map.getView().fit(extent);
+           
+    
+            var map = new ol.Map({
+                target: 'map',
+                layers: [
+                    new ol.layer.Tile({
+                        source: new ol.source.OSM()
+                    }),vectorLayer
+                ],
+                view: new ol.View({
+                    projection: 'EPSG:4326',
+                    center: [ data[0][1],data[0][0]],
+                    zoom: 11
+                }),
+              
+            });
+        </script>
+
        
         
     
