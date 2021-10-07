@@ -1,3 +1,4 @@
+from flask.scaffold import F
 import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
 from shapely.geometry import point
@@ -114,6 +115,7 @@ def dfSelector(ciudad):
 
 #Establece los parametros del sorteo
 def mainSorteo(ciudad,puntos1,puntos2,puntos3):
+    
     df_f =   dfSelector(ciudad)
     ciudad = ciudad
     # Numero de puntos muestrales en el estrado
@@ -127,4 +129,16 @@ def mainSorteo(ciudad,puntos1,puntos2,puntos3):
     sortear(df_f,puntos3,ciudad,nse3,j)
     
     df_puntos.to_csv('Puntos.csv',index = False)
+    dt = df_puntos.to_numpy()
+    arreglo = []
+    for row in dt:
+        a = row[0]
+        b = row[1]
+        c = row[2]
+        d = row[3]
+        e = row[4] 
+        f = row[5]
+        r = [a,b,c,d,e,f]
+        arreglo.append(r)
 
+    return arreglo
