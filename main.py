@@ -21,8 +21,8 @@ def data():
     arreglo=mainSorteo(ciudad,puntos1,puntos2,puntos3)
     coordenadas = []
     for punto in arreglo:
-        coordenadas.append([punto[4],punto[5]])
-    mensaje = "Sorteo exitoso"
+        coordenadas.append([punto[4],punto[5],punto[3]])
+    mensaje = "Puntos de " + ciudad
     return render_template('Form.html',mensaje = mensaje,arreglo=arreglo,coordenadas=coordenadas)
 
 app.run(debug= True)

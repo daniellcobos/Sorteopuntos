@@ -16,10 +16,9 @@ def pcd_leer_mgn():
 
 df = pd.read_excel(r"D:\Censo2018.xlsx", engine='openpyxl')
 
-import reverse_geocoder as rg
-import pprint
 
-def sortear(df_f,puntos, ciudad, nse, j):
+
+def sortear(df_f,df_puntos,puntos, ciudad, nse, j):
     npersonas = df_f[nse].cumsum()
     maximo = npersonas.tail(1)
 
@@ -50,7 +49,7 @@ def sortear(df_f,puntos, ciudad, nse, j):
 
     
     
-df_puntos = pd.DataFrame(columns=['Ciudad', 'Punto', 'Manzana', 'Estrato' , 'Latitud', 'Longitud'])    
+   
 
 nse1 = "Bajo"
 nse2 = "Medio"
@@ -115,18 +114,18 @@ def dfSelector(ciudad):
 
 #Establece los parametros del sorteo
 def mainSorteo(ciudad,puntos1,puntos2,puntos3):
-    
+    df_puntos = pd.DataFrame(columns=['Ciudad', 'Punto', 'Manzana', 'Estrato' , 'Latitud', 'Longitud']) 
     df_f =   dfSelector(ciudad)
     ciudad = ciudad
     # Numero de puntos muestrales en el estrado
     j = 1
-    sortear(df_f,puntos1,ciudad,nse1,j)
+    sortear(df_f,df_puntos,puntos1,ciudad,nse1,j)
 
     j = j + puntos1
-    sortear(df_f,puntos2,ciudad,nse2,j)
+    sortear(df_f,df_puntos,puntos2,ciudad,nse2,j)
 
     j = j + puntos2
-    sortear(df_f,puntos3,ciudad,nse3,j)
+    sortear(df_f,df_puntos,puntos3,ciudad,nse3,j)
     
     df_puntos.to_csv('static/Puntos.csv',index = False)
     df_puntos.to_excel('static/Puntos.xlsx',index = False)
@@ -141,5 +140,6 @@ def mainSorteo(ciudad,puntos1,puntos2,puntos3):
         f = row[5]
         r = [a,b,c,d,e,f]
         arreglo.append(r)
-
+    else:
+        df_puntos = df_puntos.iloc[0:0]
     return arreglo

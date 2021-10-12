@@ -56,7 +56,9 @@
                     <li class="list-group-item">
                         <p>Estrato: {{item[3]}},
                             Latitud: {{item[4]}},
-                            Longitud: {{item[5]}}, </p>
+                            Longitud: {{item[5]}},<br>
+                            Id Manzana: {{item[2]}}
+                         </p>
                     </li>
                     {% endfor %}
             </ul> <br>
@@ -74,13 +76,31 @@
         <script type="text/javascript">
             var data = {{coordenadas|safe}};
           
-            var iconStyle = new ol.style.Style({
+            var iconStyleBajo = new ol.style.Style({
                 image: new ol.style.Icon({
                     anchor: [0.5, 1],
                     anchorXUnits: 'fraction',
                     anchorYUnits: 'fraction',
                     src: 'https://www.ockert-cnc.de/wp-content/uploads/2016/12/map-marker-icon-300x300.png',
                     scale: 0.1
+                })
+            });
+            var iconStyleMedio = new ol.style.Style({
+                image: new ol.style.Icon({
+                    anchor: [0.5, 1],
+                    anchorXUnits: 'fraction',
+                    anchorYUnits: 'fraction',
+                    src: 'https://www.pngall.com/wp-content/uploads/2017/05/Map-Marker-Free-Download-PNG.png',
+                    scale: 0.07
+                })
+            });
+            var iconStyleAlto = new ol.style.Style({
+                image: new ol.style.Icon({
+                    anchor: [0.5, 1],
+                    anchorXUnits: 'fraction',
+                    anchorYUnits: 'fraction',
+                    src: 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/88/Map_marker.svg/512px-Map_marker.svg.png',
+                    scale: 0.04
                 })
             });
     
@@ -101,7 +121,15 @@
                 })
                 console.log(data)
                 console.log(iconFeature.getGeometry().getCoordinates())
-                iconFeature.setStyle(iconStyle)
+                if (point[2] == "Alto"){
+                    iconFeature.setStyle(iconStyleAlto)
+                }
+                if (point[2] == "Medio"){
+                    iconFeature.setStyle(iconStyleMedio)
+                }
+                if (point[2] == "Bajo"){
+                    iconFeature.setStyle(iconStyleBajo)
+                }
                 vectorSource.addFeature(iconFeature)
             
             }
@@ -123,7 +151,7 @@
                 view: new ol.View({
                     projection: 'EPSG:4326',
                     center: [ data[0][1],data[0][0]],
-                    zoom: 11
+                    zoom: 10
                 }),
               
             });
