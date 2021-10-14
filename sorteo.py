@@ -131,14 +131,15 @@ def mainSorteo(ciudad,puntos1,puntos2,puntos3):
     df_puntos.to_excel('static/Puntos.xlsx',index = False)
     dt = df_puntos.to_numpy()
     arreglo = []
-    for row in dt:
+    for index,row in enumerate(dt):
         a = row[0]
         b = row[1]
         c = row[2]
         d = row[3]
         e = row[4] 
         f = row[5]
-        r = [a,b,c,d,e,f]
+        g = index + 1
+        r = [a,b,c,d,e,f,g]
         arreglo.append(r)
     else:
         df_puntos = df_puntos.iloc[0:0]

@@ -1,41 +1,44 @@
 <!DOCTYPE html>
+
 <head>
     <title> Sorteo de puntos </title>
-    
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.8.1/build/ol.js"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.8.1/css/ol.css">
-  <style>
-    .map {
-      height: 400px;
-      width: 100%;
-    }
 
-  </style>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.8.1/build/ol.js"></script>
+    <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.8.1/css/ol.css">
+    <style>
+        .map {
+            height: 400px;
+            width: 100%;
+        }
+    </style>
 </head>
-<body>
-  
-    <br>
-    
 
-        <div class="container-fluid p-5 bg-primary text-white text-center">
-            <h1>Sorteo de Manzanas</h1>
-            <h3>Informacion DANE censo 2018</h3>
-        </div>
-          
-        <div class="container mt-5">
-          <div class="row">
+<body>
+
+    <br>
+
+
+    <div class="container-fluid p-5 bg-primary text-white text-center">
+        <h1>Sorteo de Manzanas</h1>
+        <h3>Informacion DANE censo 2018</h3>
+    </div>
+
+    <div class="container mt-5">
+        <div class="row">
             <div class="col-sm-4">
-                <form  action="{{ url_for('data') }}" method="POST" name="data" id="data">
+                <form action="{{ url_for('data') }}" method="POST" name="data" id="data">
                     <label for="ciudad"> Seleccione una ciudad</label><br>
                     <select name="ciudad" id="ciudad">
                         <option value="Bogota y Soacha">Bogota y Soacha</option>
                         <option value="Medellin y Valle de Aburra" selected>Medellin y Valle de Aburra</option>
                         <option value="Barranquilla y Soledad">Barranquilla y Soledad</option>
-                        <option value="Bucaramanga - Floridablanca - Piedecuesta">Bucaramanga - Floridablanca - Piedecuesta</option>
+                        <option value="Bucaramanga - Floridablanca - Piedecuesta">Bucaramanga - Floridablanca -
+                            Piedecuesta</option>
                         <option value="Cartagena" selected>Cartagena</option>
                         <option value="Cali">Cali</option>
                         <option value="Pereira y Dosquebradas">Pereira y Dosquebradas</option>
@@ -51,113 +54,109 @@
             </div>
             <div class="col-sm-4">
                 <h2>{{mensaje}}</h2>
-            <ul class="list-group">
+                <ul class="list-group">
                     {% for item in arreglo %}
                     <li class="list-group-item">
-                        <p>Estrato: {{item[3]}},
+
+                        <p>{{item[6]}}.,Estrato: {{item[3]}},
                             Latitud: {{item[4]}},
                             Longitud: {{item[5]}},<br>
                             Id Manzana: {{item[2]}}
-                         </p>
+                        </p>
                     </li>
                     {% endfor %}
-            </ul> <br>
-            <a href="{{ url_for('static', filename='Puntos.xlsx') }}">Descarga Los Puntos</a>
+                </ul> <br>
+                <a href="{{ url_for('static', filename='Puntos.xlsx') }}">Descarga Los Puntos</a>
             </div>
             <div class="col-sm-4">
                 <h3> Mapa de Puntos</h3>
                 <div id="map" class="map"></div>
             </div>
-          </div>
         </div>
-        
-        
-        
-        <script type="text/javascript">
-            var data = {{coordenadas|safe}};
-          
-            var iconStyleBajo = new ol.style.Style({
-                image: new ol.style.Icon({
-                    anchor: [0.5, 1],
-                    anchorXUnits: 'fraction',
-                    anchorYUnits: 'fraction',
-                    src: 'https://www.ockert-cnc.de/wp-content/uploads/2016/12/map-marker-icon-300x300.png',
-                    scale: 0.1
-                })
-            });
-            var iconStyleMedio = new ol.style.Style({
-                image: new ol.style.Icon({
-                    anchor: [0.5, 1],
-                    anchorXUnits: 'fraction',
-                    anchorYUnits: 'fraction',
-                    src: 'https://www.pngall.com/wp-content/uploads/2017/05/Map-Marker-Free-Download-PNG.png',
-                    scale: 0.07
-                })
-            });
-            var iconStyleAlto = new ol.style.Style({
-                image: new ol.style.Icon({
-                    anchor: [0.5, 1],
-                    anchorXUnits: 'fraction',
-                    anchorYUnits: 'fraction',
-                    src: 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/88/Map_marker.svg/512px-Map_marker.svg.png',
-                    scale: 0.04
-                })
-            });
-    
-            var vectorSource = new ol.source.Vector({
-                features: []
-            });
-    
-            var vectorLayer = new ol.layer.Vector({
-                source: vectorSource
-            });
-    
-    
-            for (point of data){
-                
-                let iconFeature = new ol.Feature({
-                    geometry: new ol.geom.Point([point[1], point[0]]),
-                    name: data.name
-                })
-                console.log(data)
-                console.log(iconFeature.getGeometry().getCoordinates())
-                if (point[2] == "Alto"){
-                    iconFeature.setStyle(iconStyleAlto)
-                }
-                if (point[2] == "Medio"){
-                    iconFeature.setStyle(iconStyleMedio)
-                }
-                if (point[2] == "Bajo"){
-                    iconFeature.setStyle(iconStyleBajo)
-                }
-                vectorSource.addFeature(iconFeature)
-            
-            }
-        
-    
-       
-    
-            var extent = vectorSource.getExtent();
-            //map.getView().fit(extent);
-           
-    
-            var map = new ol.Map({
-                target: 'map',
-                layers: [
-                    new ol.layer.Tile({
-                        source: new ol.source.OSM()
-                    }),vectorLayer
-                ],
-                view: new ol.View({
-                    projection: 'EPSG:4326',
-                    center: [ data[0][1],data[0][0]],
-                    zoom: 10
-                }),
-              
-            });
-        </script>
+    </div>
 
-       
-        
-    
+
+
+    <script type="text/javascript">
+        var data = {{ coordenadas| safe}};
+
+
+
+        var vectorSource = new ol.source.Vector({
+            features: []
+        });
+
+        var vectorLayer = new ol.layer.Vector({
+            source: vectorSource
+        });
+
+        var styleFunction = function (point) {
+
+            let colortext = ''
+            if (point[2] == "Alto") {
+                colortext = 'orange'
+            }
+            if (point[2] == "Medio") {
+                colortext = 'blue'
+
+            }
+            if (point[2] == "Bajo") {
+                colortext = 'red'
+            }
+            varstyle = new ol.style.Style({
+
+                text: new ol.style.Text({
+                    font: '16px Calibri,sans-serif',
+                    fill: new ol.style.Fill({ color: colortext }),
+                    stroke: new ol.style.Stroke({
+                        color: '#fff', width: 2
+                    }),
+                    // get the text from the feature - `this` is ol.Feature
+                    // and show only under certain resolution
+                    text: point[3].toString()
+                })
+            })
+            return varstyle;
+        }
+        for (point of data) {
+
+            let iconFeature = new ol.Feature({
+
+                geometry: new ol.geom.Point([point[1], point[0]]),
+                name: data.name,
+
+            })
+
+            iconFeature.setStyle(styleFunction(point))
+
+            vectorSource.addFeature(iconFeature)
+            console.log(iconFeature.getStyle())
+        }
+
+
+
+
+        var extent = vectorSource.getExtent();
+        //map.getView().fit(extent);
+
+
+        var map = new ol.Map({
+            target: 'map',
+            layers: [
+                new ol.layer.Tile({
+                    source: new ol.source.OSM()
+                }), vectorLayer
+            ],
+            view: new ol.View({
+                projection: 'EPSG:4326',
+                center: [data[0][1], data[0][0]],
+                zoom: 10
+            }),
+
+        });
+    </script>
+
+
+
+
 </body>
