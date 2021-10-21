@@ -1,10 +1,7 @@
-Ciudad,Punto,Manzana,Estrato,Latitud,Longitud
-Bucaramanga - Floridablanca - Piedecuesta,1 - Bajo,6800110000000002800616,Bajo,7.14499230679,-73.124413
-Bucaramanga - Floridablanca - Piedecuesta,2 - Bajo,6800110000000002850125,Bajo,7.15298783395,-73.1259747307
-Bucaramanga - Floridablanca - Piedecuesta,3 - Bajo,6800110000000002850513,Bajo,7.14997382542,-73.1239001484
-Bucaramanga - Floridablanca - Piedecuesta,4 - Medio,6800110000000009440321,Medio,7.09960313404,-73.109882217
-Bucaramanga - Floridablanca - Piedecuesta,5 - Medio,6827610000000000090315,Medio,7.06004692805,-73.0866898312
-Bucaramanga - Floridablanca - Piedecuesta,6 - Medio,6827610000000000030630,Medio,7.07496927963,-73.0833930158
-Bucaramanga - Floridablanca - Piedecuesta,7 - Alto,6800110000000012380513,Alto,7.11615102554,-73.1060115377
-Bucaramanga - Floridablanca - Piedecuesta,8 - Alto,6827610000000000110231,Alto,7.08236877722,-73.109770799
-Bucaramanga - Floridablanca - Piedecuesta,9 - Alto,6800110000000010620105,Alto,7.09316301106,-73.1110351889
+ciudad,Punto,Manzana,Estrato,Latitud,Longitud
+Bogota y Soacha,1 - bajo,1100110000000024220503,bajo,4.586310417,-74.17413266
+Bogota y Soacha,2 - bajo,1100110000000045530118,bajo,4.649256122,-74.15510947
+Bogota y Soacha,3 - medio,1100110000000031060106,medio,4.595540474,-74.07392878
+Bogota y Soacha,4 - medio,1100110000000045320603,medio,4.617297967,-74.16535709
+Bogota y Soacha,5 - alto,1100110000000085020202,alto,4.742698904,-74.03220657
+Bogota y Soacha,6 - alto,1100110000000043040721,alto,4.621482897,-74.12404834
