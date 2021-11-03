@@ -1,0 +1,43 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div  class="portfolio-block block-intro">
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+    <div class="notification is-danger">
+        {{ messages[0] }}. Go to <a href="{{ url_for('auth.login') }}">login page</a>.
+    </div>
+{% endif %}
+{% endwith %}
+<form method="POST" action="/signup"  class="form-group">
+<div class="column is-4 is-offset-4">
+    <h3 class="title">Registro</h3>
+    <div class="box">
+        <form method="POST" action="/signup">
+            <div class="field">
+                <label for= email> Email </label>
+                <div class="control">
+                    <input class="form-control"  type="email" name="email" placeholder="Email" autofocus="">
+                </div>
+            </div>
+
+            <div class="field">
+                <label for= email> Nombre </label>
+                <div class="control">
+                    <input class="form-control"  type="text" name="name" placeholder="Name" autofocus="">
+                </div>
+            </div>
+
+            <div class="field">
+                <label for= email> Contraseña </label>
+                <div class="control">
+                    <input class="form-control"  type="password" name="password" placeholder="Password">
+                </div>
+            </div>
+
+            <button class="button is-block is-info is-large is-fullwidth">Sign Up</button>
+        </form>
+    </div>
+</div>
+</div>
+{% endblock %}

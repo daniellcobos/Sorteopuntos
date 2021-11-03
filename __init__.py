@@ -1,41 +1,44 @@
 from flask import Flask,request,render_template
 import pandas as pd
-import os
-from sorteo import mainSorteo
-from sorteo import db
+
+
+from .models import db
+from flask_migrate import Migrate
+from flask_login import LoginManager
+
+
 app = Flask(__name__, static_url_path = '/static')
 app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql://postgres:admin@localhost:5432/app"
+app.secret_key = b'Gw\x16\xbd^x\xb6]\xe2\xc4:g+mk\xe1'
+
+migrate = Migrate(app, db)
+
 db.init_app(app)
 
+login_manager = LoginManager()
+login_manager.login_view = 'auth.login'
+login_manager.init_app(app)
 
-@app.route('/')
-def form():
-    #Pagina del formulario
-    mensaje = ""
-    return render_template('Form.html',mensaje = mensaje)
+from .models import User
+@login_manager.user_loader
+def load_user(user_id):
+        # since the user_id is just the primary key of our user table, use it in the query for the user
+    return User.query.get(int(user_id))
 
-@app.route('/data', methods =['POST'])
 
-def data():
-    #Conversion de sql a dataframe
-    
-    
-    #Pide los datos del formulario
-    ciudad = request.form['ciudad']
-    puntos1 = int(request.form['puntos1'])
-    puntos2 = int(request.form['puntos2'])
-    puntos3 = int(request.form['puntos3'])
-    # Hace sorteo con los datos del formulario
-    archivo1 = os.path.join(app.root_path, 'static/Puntos.csv')
-    archivo2 = os.path.join(app.root_path, 'static/Puntos.xlsx')
-    arreglo=mainSorteo(ciudad,puntos1,puntos2,puntos3,archivo1,archivo2)
-    
-    coordenadas = []
-    for punto in arreglo:
-       coordenadas.append([punto[4],punto[5],punto[3],punto[6]])
-    mensaje = "Puntos de " + ciudad
-    return render_template('Form.html',mensaje = mensaje,arreglo=arreglo,coordenadas=coordenadas)
-    
 
+ # blueprint for auth routes in our app
+from .auth import auth as auth_blueprint
+app.register_blueprint(auth_blueprint)
+
+# blueprint for non-auth parts of app
+from .main import main as main_blueprint
+app.register_blueprint(main_blueprint)
+
+from .synapsis import synapsis as synapsis_blueprint
+app.register_blueprint(synapsis_blueprint)
+
+
+      
 if __name__ == "__main__":
     app.run(host='0.0.0.0',debug=True)

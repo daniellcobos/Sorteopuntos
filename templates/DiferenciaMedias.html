@@ -1,0 +1,407 @@
+{% extends "layout.html" %}
+{% block title %}Series de tiempo {% endblock %}
+{% block head %}
+{{ super() }}
+{% endblock %}
+{% block content %}
+
+<script src='https://cdnjs.cloudflare.com/ajax/libs/stats.js/16/Stats.min.js'></script>
+<script src='https://cdn.jsdelivr.net/npm/gauss@0.2.12/gauss.min.js'></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jstat/1.9.5/jstat.min.js"
+  integrity="sha512-MGT8BGoc8L3124PwHEGTC+M8Hu9oIbZOg8ENcd92sQKKidWKOOOZ6bqQemqYAX0yXJUnovOkF4Hx9gc/5lVxPw=="
+  crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+
+
+
+
+
+<section class="portfolio-block block-intro">
+ 
+  <h2 id="title">Caso en el que se le dejo a la misma muestra el Producto A y el Producto B</h2>
+  <h3 id="subtitle">Diferencias de Medias para Prueba de Producto Dependiente</h3>
+
+   
+ 
+
+  
+  <form id="calc" name="calc">
+    <div class="row">
+      <div  class="col-sm-4">
+        <p id="seltext"> Seleccione tipo de muestra:</p>
+      </div>
+      
+      <div  class="col-8 text-start">
+        <input type="radio" id="independiente" name="seleccion" value="independiente" />
+        <label for="Independiente">Independiente</label>
+        <br>
+    
+    
+        <input type="radio" id="dependiente" name="seleccion" value="dependiente" />
+        <label for="Dependiente">Dependiente</label>
+      </div>
+       
+    </div>
+    <br>
+    <div id="dep">
+      <div class="alert alert-primary col-12" role="alert">
+        <center>
+          <h5> Datos de la Muestra:</h5>
+        </center>
+        <hr>
+        <div class="row">
+          <div class="col">Tamaño de Muestra:</div>
+          <div class="col"><input name="boxM1" onkeyup="to(this.form)" type="text" value="100"></div>
+          <div class="col">Desviacion Estandar:</div>
+          <div class="col"><input name="boxDE" onkeyup="to(this.form)" type="text" value="1"></div>
+        </div>
+
+      </div>
+      <div class="alert alert-primary col-12" role="alert">
+        <center>
+          <h5>Producto A</h5>
+        </center>
+        <hr>
+        <div class="row">
+          <div class="col">
+            Media A:
+          </div>
+          <div class="col">
+            <input name="boxP1" onkeyup="to(this.form)" type="text" value="50" class="form-control">
+          </div>
+        </div>
+        </center>
+      </div>
+
+      <div class="alert alert-info" role="alert">
+        <center>
+          <h5>Producto B</h5>
+        </center>
+        <hr>
+        <div class="row">
+          <div class="col">
+            Media B:
+          </div>
+          <div class="col">
+            <input name="boxP2" onkeyup="to(this.form)" type="text" value="50" class="form-control">
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <div id="ind" style="display: none;">
+      <div class="alert alert-primary col-12" role="alert">
+        <center>
+          <h5>Producto A</h5>
+
+          <hr>
+          <div class="row">
+            <div class="col">
+              Muestra A:
+            </div>
+            <div class="col">
+              <input name="boxA0" onkeyup="to(this.form)" type="text" value="100" class="form-control">
+            </div>
+            <div class="col">
+              Media A:
+            </div>
+            <div class="col">
+              <input name="boxA1" onkeyup="to(this.form)" type="text" value="50" class="form-control">
+            </div>
+            <div class="col">
+              Desviacion Estandar A::
+            </div>
+            <div class="col">
+              <input name="boxA2" onkeyup="to(this.form)" type="text" value="1" class="form-control">
+            </div>
+          </div>
+        </center>
+      </div>
+      <div class="alert alert-info" role="alert">
+        <center>
+          <h5>Producto B</h5>
+        </center>
+        <hr>
+        <div class="row">
+          <div class="col">
+            Muestra B:
+          </div>
+          <div class="col">
+            <input name="boxB0" onkeyup="to(this.form)" type="text" value="100" class="form-control">
+          </div>
+          <div class="col">
+            Media B:
+          </div>
+          <div class="col">
+            <input name="boxB1" onkeyup="to(this.form)" type="text" value="50" class="form-control">
+          </div>
+          <div class="col">
+            Desviacion Estandar B::
+          </div>
+          <div class="col">
+            <input name="boxB2" onkeyup="to(this.form)" type="text" value="1" class="form-control">
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    </table>
+    <h6 id='salida90'>La diferencia no es significativa al 90%</h6>
+    <h6 id='salida95'>La diferencia no es significativa al 95%</h6>
+    <h6 id='salida99'>La diferencia no es significativa al 99%</h6>
+  </form>
+
+  <br>
+
+ 
+</section>
+
+<main class="page project-page">
+  <section class="portfolio-block project">
+    <div class="container">
+      <div class="row">
+        <div class="col-12 col-md-12 offset-md-12 info">
+          <h3>Descripción del Test Estadístico</h3>
+          <p>Hipotesis Nula (H0): No hay diferencia entre las medias A y B</p>
+          <p>Hipotesis Alternativa (HA): Si hay diferencia entre entre las medias A y B</p>
+          <p>Prueba t de Student para dos proporciones / Prueba de dos colas:</p>
+          <p id='tobservado'>t (Observado) : 0</p>
+          <p>t (Teórico al 90%) : +/- 1.65</p>
+          <p>t (Teórico al 95%) : +/- 1.96</p>
+          <p>t (Teórico al 99%) : +/- 2.58</p>
+          <p id='pvalor'>p-valor: 0</p>
+          <h3>interpretación del Resultado</h3>
+          <p id='interpretacion'>Como el valor p = 0 calculado es menor que el nivel de significancia mínimo alfa =
+            0.10, no se puede rechazar la hipótesis nula H0., No hay diferencia entre las dos medias A y B </p>
+          <p id='perror'>El riesgo de rechazar la hipótesis nula H0 mientras sea verdadera es del 0%.</p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+</main>
+
+<script>
+  dependiente = document.getElementById("dependiente")
+  independiente = document.getElementById("independiente")
+  dependiente.addEventListener('click',
+    () => {
+      ;
+      document.getElementById("title").innerText = "Caso en el que se le dejo a la misma muestra el Producto A y el Producto B"
+      document.getElementById("subtitle").innerText = "Diferencias de Medias para Prueba de Producto Dependiente";
+      document.getElementById("dep").style.display = "block";
+      document.getElementById("ind").style.display = "none";
+    }
+  )
+  independiente.addEventListener('click',
+    () => {
+      document.getElementById("title").innerText = "Caso en el que se le dejaron a dos muestras diferentes el producto A y el producto B";
+      document.getElementById("subtitle").innerText = "Diferencias de Medias para Prueba de Producto Independiente";
+      document.getElementById("dep").style.display = "none";
+      document.getElementById("ind").style.display = "block";
+    }
+  )
+
+
+  mu = 0;
+  de = 0;
+  mea = 0;
+  meb = 0;
+  va = 0;
+  vb = 0;
+  pa = 0;
+  pb = 0;
+  ma = 0;
+  mb = 0;
+
+  function to(obj) {
+
+    if (obj.boxM1.value == "") {
+      mu = 0;
+    }
+    else {
+      mu = eval(obj.boxM1.value)
+
+    }
+
+    if (obj.boxDE.value == "") {
+      de = 0;
+    }
+    else {
+      de = eval(obj.boxDE.value)
+
+    }
+
+    if (obj.boxP1.value == "") {
+      mea = 0;
+    }
+    else {
+      mea = eval(obj.boxP1.value)
+
+    }
+
+    if (obj.boxP2.value == "") {
+      meb = 0;
+    }
+    else {
+      meb = eval(obj.boxP2.value)
+
+    }
+    if (obj.boxA0.value == "") {
+      ma = 0;
+    }
+    else {
+      ma = eval(obj.boxA0.value)
+
+    }
+
+    if (obj.boxA1.value == "") {
+      pa = 0;
+    }
+    else {
+      pa = eval(obj.boxA1.value)
+
+    }
+
+    if (obj.boxB0.value == "") {
+      mb = 0;
+    }
+    else {
+      mb = eval(obj.boxB0.value)
+
+    }
+
+    if (obj.boxB1.value == "") {
+      pb = 0;
+    }
+    else {
+      pb = eval(obj.boxB1.value)
+
+    }
+    if (obj.boxA2.value == "") {
+      va = 0;
+    }
+    else {
+      va = eval(obj.boxA2.value)
+
+    }
+    if (obj.boxB2.value == "") {
+      vb = 0;
+    }
+    else {
+      vb = eval(obj.boxB2.value)
+
+    }
+
+
+    //console.log(pa0);
+    //console.log(pa1);
+    //console.log(pb0);
+    //console.log(pb1);
+
+    //https://www.uv.es/webgid/Inferencial/31_diferencia_de_medias_independientes.html 
+    //Previa del estadistico T paso a paso dependiente
+    DifMedDep = mea - meb
+    denTscore = de / Math.sqrt(mu)
+    //Previa del T independiente
+    DifMed = pa - pb
+    //Calculo del estadistico T paso a paso
+    d1 = ((ma - 1) * Math.pow(va, 2)) + ((mb - 1) * Math.pow(vb, 2))
+    d2 = ma + mb - 2
+    d3 = (1 / ma) + (1 / mb)
+    d4 = (d1 / d2) * d3
+    d5 = Math.sqrt(d4)
+
+    t_score = DifMedDep / denTscore
+    p_value = jStat.jStat.ttest(t_score, mu, 1);
+
+    if (independiente.checked) {
+      t_score = DifMed / d5
+      console.log("t independiente: " + t_score)
+      p_value = jStat.jStat.ttest(t_score, (ma + mb), 2);
+      console.log("p independiente: " + p_value)
+    }
+    else if (dependiente.checked) {
+      t_score = DifMedDep / denTscore
+      console.log("t dependiente: " + t_score)
+      p_value = jStat.jStat.ttest(t_score, mu, 2);
+      console.log("p dependiente: " + p_value)
+    }
+    salida90 = "La diferencia no es significativa al 90%"
+    salida95 = "La diferencia no es significativa al 95%"
+    salida99 = "La diferencia no es significativa al 99%"
+
+
+    console.log("p valor= " + p_value);
+    a = p_value < 0.1
+    b = p_value > 0.9
+    console.log(a);
+    console.log(b);
+
+    if (p_value < 0.1 || p_value > 0.9) {
+      salida90 = "Hay diferencias significativas al 90%"
+    }
+
+    if (p_value < 0.05 || p_value > 0.95) {
+      salida95 = "Hay diferencias significativas al 95%"
+    }
+
+    if (p_value < 0.01 || p_value > 0.99) {
+      salida99 = "Hay diferencias significativas al 99%"
+    }
+
+
+    document.getElementById("salida90").innerText = salida90;
+    document.getElementById("salida95").innerText = salida95;
+    document.getElementById("salida99").innerText = salida99;
+
+    interpretacion = "Como el valor p = 0 calculado es mayor que el nivel de significancia alfa = 0.10, no se puede rechazar la hipótesis nula H0."
+
+
+
+    a = p_value < 0.1
+    b = p_value > 0.9
+    //console.log(a);
+    //console.log(b);
+
+    if (p_value < 0.1 || p_value > 0.9) {
+      salida90 = "Hay diferencias significativas al 10%"
+      interpretacion = "Como el valor p = " + p_value.toFixed(4) + " calculado es menor que el nivel de significancia alfa = 0.10, se puede rechazar la hipótesis nula H0 y tomar HA. Hay diferencia entre las medias A y B."
+    }
+
+    if (p_value < 0.05 || p_value > 0.95) {
+      salida95 = "Hay diferencias significativas al 5%"
+      interpretacion = "Como el valor p = " + p_value.toFixed(4) + " calculado es menor que el nivel de significancia alfa = 0.05, se puede rechazar la hipótesis nula H0 y tomar HA. Hay diferencia entre las medias A y B."
+    }
+
+    if (p_value < 0.01 || p_value > 0.99) {
+      salida99 = "Hay diferencias significativas al 1%"
+      interpretacion = "Como el valor p = " + p_value.toFixed(4) + " calculado es menor que el nivel de significancia alfa = 0.01, se puede rechazar la hipótesis nula H0 y tomar HA. Hay diferencia entre las medias A y B."
+    }
+
+
+    document.getElementById("salida90").innerText = salida90;
+    document.getElementById("salida95").innerText = salida95;
+    document.getElementById("salida99").innerText = salida99;
+
+    document.getElementById("tobservado").innerText = "t (Observado) : " + t_score.toFixed(4);
+    document.getElementById("pvalor").innerText = "p-valor: " + p_value.toFixed(4);
+    document.getElementById("interpretacion").innerText = interpretacion;
+    document.getElementById("perror").innerText = "El riesgo de rechazar la hipótesis nula H0 mientras sea verdadera es del " + (p_value * 100).toFixed(2) + "%.";
+
+
+
+
+
+
+
+
+  }
+
+
+
+</script>
+
+
+{% endblock %}

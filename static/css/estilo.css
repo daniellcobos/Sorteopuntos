@@ -1,0 +1,21 @@
+/*! normalize.css v5.0.0 | MIT License | github.com/necolas/normalize.css */
+@import url('https://fonts.googleapis.com/css?family=Didact+Gothic');
+
+* {
+    font-family:'Century Gothic','Futura','Didact Gothic',san-serif;
+    font-size:small;
+}
+#calc{
+    max-width: 750px;
+}
+.bg-custom-2 {
+    background-image: linear-gradient(45deg, #1490b3 40%, #Bd2293 60%);
+}
+
+h2 {
+    color: #Bd2292;
+    font-weight: bold;
+}
+#seltext{
+    font-size: 14px;
+}

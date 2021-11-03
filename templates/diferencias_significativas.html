@@ -1,0 +1,286 @@
+{% extends "layout.html" %}
+{% block title %}Series de tiempo {% endblock %}
+{% block head %}
+{{ super() }}
+{% endblock %}
+{% block content %}
+
+
+<script src='https://cdnjs.cloudflare.com/ajax/libs/stats.js/16/Stats.min.js'></script>
+<script src='https://cdn.jsdelivr.net/npm/gauss@0.2.12/gauss.min.js'></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jstat/1.9.5/jstat.min.js"
+  integrity="sha512-MGT8BGoc8L3124PwHEGTC+M8Hu9oIbZOg8ENcd92sQKKidWKOOOZ6bqQemqYAX0yXJUnovOkF4Hx9gc/5lVxPw=="
+  crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+
+
+  
+
+
+
+
+
+
+<section class="portfolio-block block-intro">
+
+  
+  <center>
+    <h2 id="title">Caso en el que se le dejaron a la misma persona los productos A y B</h2>
+    <h3 id="subtitle">Diferencias de Proporciones para Prueba de Producto Dependiente</h3>
+  </center>
+
+  <div class="container">
+    <form id="calc" name="calc">
+      <div class="row">
+        <div  class="col-sm-4">
+          <p id="seltext"> Seleccione tipo de muestra:</p>
+        </div>
+        
+        <div  class="col-8 text-start">
+          <input type="radio" id="independiente" name="seleccion" value="independiente" />
+          <label for="Independiente">Independiente</label>
+          <br>
+      
+      
+          <input type="radio" id="dependiente" name="seleccion" value="dependiente" />
+          <label for="Dependiente">Dependiente</label>
+        </div>
+         
+      </div>
+      <div class="alert alert-primary col-12" role="alert">
+        <center>
+          <h5>Producto A</h5>
+
+          <hr>
+          <div class="row">
+            <div class="col">
+              Muestra A:
+            </div>
+            <div class="col">
+              <input name="boxA0" onkeyup="to(this.form)" type="text" value="100" class="form-control">
+            </div>
+            <div class="col">
+              % Prefieren A:
+            </div>
+            <div class="col">
+              <input name="boxA1" onkeyup="to(this.form)" type="text" value="50" class="form-control">
+            </div>
+          </div>
+        </center>
+      </div>
+
+      <div class="alert alert-info" role="alert">
+        <center>
+          <h5>Producto B</h5>
+        </center>
+        <hr>
+        <div class="row">
+          <div class="col">
+            Muestra B:
+          </div>
+          <div class="col">
+            <input name="boxB0" onkeyup="to(this.form)" type="text" value="100" class="form-control">
+          </div>
+          <div class="col">
+            % Prefieren B:
+          </div>
+          <div class="col">
+            <input name="boxB1" onkeyup="to(this.form)" type="text" value="50" class="form-control">
+          </div>
+        </div>
+      </div>
+
+
+      <h6 id='salida90'>La diferencia no es significativa al 10%</h6>
+      <h6 id='salida95'>La diferencia no es significativa al 5%</h6>
+      <h6 id='salida99'>La diferencia no es significativa al 1%</h6>
+
+
+    </form>
+  </div>
+
+</section>
+
+<main class="page project-page">
+  <section class="portfolio-block project">
+    <div class="container">
+      <div class="row">
+        <div class="col-12 col-md-12 offset-md-12 info">
+          <h3>Descripción del Test Estadístico</h3>
+          <p>Hipotesis Nula (H0): No hay diferencia entre los dos productos A y B</p>
+          <p>Hipotesis Alternativa (HA): Si hay diferencia entre los dos productos A y B</p>
+          <p>Prueba z para dos proporciones / Prueba de dos colas:</p>
+          <p id='zobservado'>z (Observado) : 0</p>
+          <p>z (Teórico al 90%) : +/- 1.65</p>
+          <p>z (Teórico al 95%) : +/- 1.96</p>
+          <p>z (Teórico al 99%) : +/- 2.58</p>
+          <p id='pvalor'>p-valor: 0</p>
+          <h3>interpretación del Resultado</h3>
+          <p id='interpretacion'>Como el valor p = 0 calculado es menor que el nivel de significancia mínimo alfa =
+            0.10, no se puede rechazar la hipótesis nula H0., No hay diferencia entre los dos productos A y B </p>
+          <p id='perror'>El riesgo de rechazar la hipótesis nula H0 mientras sea verdadera es del 0%.</p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+</main>
+
+
+
+
+
+
+<script>
+  dependiente = document.getElementById("dependiente")
+  independiente = document.getElementById("independiente")
+  dependiente.addEventListener('click',
+   () => {
+     document.getElementById("title").innerText = "Caso en el que se le dejaron a la misma persona los productos A y B"
+     document.getElementById("subtitle").innerText = "Diferencias de Proporciones para Prueba de Producto Dependiente"
+   }
+  )
+  independiente.addEventListener('click',
+   () => {
+     document.getElementById("title").innerText = "Caso en el que se le dejaron a dos personas diferentes el producto A y el producto B"
+     document.getElementById("subtitle").innerText = "Diferencias de Proporciones para Prueba de Producto Independiente"
+   }
+  )
+
+
+
+
+  pa0 = 0;
+  pa1 = 0;
+  pb0 = 0;
+  pb1 = 0;
+
+  function to(obj) {
+
+    if (obj.boxA0.value == "") {
+      pa0 = 0;
+    }
+    else {
+      pa0 = eval(obj.boxA0.value)
+
+    }
+
+    if (obj.boxA1.value == "") {
+      pa1 = 0;
+    }
+    else {
+      pa1 = eval(obj.boxA1.value)
+
+    }
+
+    if (obj.boxB0.value == "") {
+      pb0 = 0;
+    }
+    else {
+      pb0 = eval(obj.boxB0.value)
+
+    }
+
+    if (obj.boxB1.value == "") {
+      pb1 = 0;
+    }
+    else {
+      pb1 = eval(obj.boxB1.value)
+
+    }
+
+
+
+    // Error A
+    pa1 = pa1 / 100;
+    errorA = Math.sqrt((pa1 * (1 - pa1) / pa0));
+    //console.log(errorA);
+
+    // Error B
+    pb1 = pb1 / 100;
+    errorB = Math.sqrt((pb1 * (1 - pb1) / pb0));
+    //console.log(errorB);  
+
+
+
+    //Calculo Proporciones Independientes
+    let P = ((pa1 * pa0) + (pb1 * pb0)) / (pa0 + pb0)
+    // Diferencia proporciones
+    Difp = (pa1 - pb1)
+    // Desviacion distribucion muestral diferencia proporciones
+    let Sp = Math.sqrt(P * (1 - P) * ((1 / pa0) + (1 / pb0)))
+
+
+
+    z_score =  (pa1 - pb1) / Math.sqrt(Math.pow(errorA, 2) + Math.pow(errorB, 2));
+
+    if (independiente.checked) {
+      // Z independiente
+      z_score = Difp / Sp
+      console.log("ZInd: " + z_score)
+    }
+    else if (dependiente.checked) {
+      // Z dependiente
+      z_score = (pa1 - pb1) / Math.sqrt(Math.pow(errorA, 2) + Math.pow(errorB, 2));
+      console.log("ZDep: " + z_score)
+    }
+
+    p_value = jStat.jStat.ztest(z_score, 2);
+
+
+    salida90 = "La diferencia no es significativa al 90%"
+    salida95 = "La diferencia no es significativa al 95%"
+    salida99 = "La diferencia no es significativa al 99%"
+    interpretacion = "Como el valor p = 0 calculado es mayor que el nivel de significancia alfa = 0.10, no se puede rechazar la hipótesis nula H0."
+
+
+
+    a = p_value < 0.1
+    b = p_value > 0.9
+    //console.log(a);
+    //console.log(b);
+
+    if (p_value < 0.1 || p_value > 0.9) {
+      salida90 = "Hay diferencias significativas al 10%"
+      interpretacion = "Como el valor p = " + p_value.toFixed(4) + " calculado es menor que el nivel de significancia alfa = 0.10, se puede rechazar la hipótesis nula H0 y tomar HA. Hay diferencia entre los productos A y B."
+    }
+
+    if (p_value < 0.05 || p_value > 0.95) {
+      salida95 = "Hay diferencias significativas al 5%"
+      interpretacion = "Como el valor p = " + p_value.toFixed(4) + " calculado es menor que el nivel de significancia alfa = 0.05, se puede rechazar la hipótesis nula H0 y tomar HA. Hay diferencia entre los productos A y B."
+    }
+
+    if (p_value < 0.01 || p_value > 0.99) {
+      salida99 = "Hay diferencias significativas al 1%"
+      interpretacion = "Como el valor p = " + p_value.toFixed(4) + " calculado es menor que el nivel de significancia alfa = 0.01, se puede rechazar la hipótesis nula H0 y tomar HA. Hay diferencia entre los productos A y B."
+    }
+
+
+    document.getElementById("salida90").innerText = salida90;
+    document.getElementById("salida95").innerText = salida95;
+    document.getElementById("salida99").innerText = salida99;
+
+    document.getElementById("zobservado").innerText = "z (Observado) : " + z_score.toFixed(4);
+    document.getElementById("pvalor").innerText = "p-valor: " + p_value.toFixed(4);
+    document.getElementById("interpretacion").innerText = interpretacion;
+    document.getElementById("perror").innerText = "El riesgo de rechazar la hipótesis nula H0 mientras sea verdadera es del " + (p_value * 100).toFixed(2) + "%.";
+
+
+
+
+
+
+
+
+
+
+
+
+  }
+
+
+
+</script>
+
+
+{% endblock %}

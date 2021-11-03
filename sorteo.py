@@ -2,42 +2,14 @@ from flask.scaffold import F
 import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
 from shapely.geometry import point
-import geopandas as gpd
 import pandas as pd
 import random
 import reverse_geocoder as rg
-from flask import Flask,request,render_template
-from flask_sqlalchemy import SQLAlchemy
-from flask_migrate import Migrate
 from sqlalchemy import or_
+from .models import db,puntosModel
 
-db= SQLAlchemy()
-class puntosModel(db.Model):
-    __tablename__ = 'Puntos'
 
-    manzana = db.Column(db.String, primary_key=True)
-    ciudad = db.Column(db.String())
-    personas = db.Column(db.String())
-    latitud = db.Column(db.Numeric())
-    longitud = db.Column(db.Numeric())
-    bajo = db.Column(db.Integer())
-    medio = db.Column(db.Integer())
-    alto = db.Column(db.Integer())
 
-    def __init__(self,manzana, ciudad, personas):
-        self.manzana = manzana
-        self.ciudad = ciudad
-        self.personas = personas
-
-    def __repr__(self):
-        return f"<Manzana {self.manzana}>"
-#def pcd_leer_mgn():
-    #fp = r"C:\Users\javie\Desktop\MGN2020_URB_AREA_CENSAL\MGN_URB_AREA_CENSAL.shp"
-   # data = gpd.read_file(fp)
-  #  print(data.head())
- #   f= data.plot()
-
-#df = pd.read_excel(r"D:\Censo2018.xlsx", engine='openpyxl')
 
 
 
@@ -79,45 +51,8 @@ nse2 = "medio"
 nse3 = "alto"
 
 
-# Filtro de ciudad
-#df_f =   df[(df.ciudad== 'Bogota') | (df.ciudad== 'Soacha')]
-#puntos1 = 29
-#puntos2 =19
-#puntos3 = 4
-#ciudad = "Bogota y Soacha"
 
 
-#df_f =   df[(df.ciudad== 'Medellin') | (df.ciudad== 'Valle de Aburra')]
-#puntos1 = 18
-#puntos2 =12
-#puntos3 = 10
-#ciudad = "Medellin y Valle de Aburra"
-
-#df_f =   df[(df.ciudad== 'Cali')]
-#puntos1 = 22
-#puntos2 =12
-#puntos3 = 7
-#ciudad = "Cali"
-
-#df_f =   df[(df.ciudad== 'Barranquilla') | (df.ciudad== 'Soledad')]
-#puntos1 = 23
-#puntos2 =8
-#puntos3 = 9
-#ciudad = "Barranquilla y Soledad"
-
-#df_f =   df[(df.ciudad== 'Bucaramanga') | (df.ciudad== 'Floridablanca') | (df.ciudad== 'Piedecuesta')]
-#puntos1 = 8
-#puntos2 =7
-#puntos3 = 5
-#ciudad = "Bucaramanga - Floridablanca - Piedecuesta"
-
-#df_f =   df[(df.ciudad== 'Cartagena')]
-#puntos1 = 28
-#puntos2 =9
-#puntos3 = 4
-#ciudad = "Cartagena"
-
-#Selector de ciudades
 def querySelector(ciudad):
     if ciudad == "Bogota y Soacha":
        query = db.session.query(puntosModel).filter(or_(puntosModel.ciudad == "Bogota",puntosModel.ciudad == "Soacha")).statement
