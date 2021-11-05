@@ -42,3 +42,8 @@ def diferencias_significativasMedia():
     mensaje = ""
     return render_template('DiferenciaMedias.html',mensaje = mensaje)   
 
+@synapsis.route('/tmuestra')
+def tamanoMuestra():
+    #Pagina del formulario
+    mensaje = ""
+    return render_template('tmuestra.html',mensaje = mensaje)   

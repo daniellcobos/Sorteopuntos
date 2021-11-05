@@ -19,3 +19,23 @@ h2 {
 #seltext{
     font-size: 14px;
 }
+.radio{
+    padding-top: 3px;
+}
+svg{
+    position: absolute;
+}
+.axis-grid line {
+    stroke: rgb(93, 100, 107);
+  }
+#legend{
+    padding-top: 1rem;
+}
+#curva {
+    color:steelblue;
+    font-weight: bold;
+}
+#tammuestra{
+    color: #Bd2292 ; 
+    font-weight: bold;
+}
