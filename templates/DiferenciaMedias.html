@@ -328,9 +328,9 @@
       p_value = jStat.jStat.ttest(t_score, mu, 2);
       console.log("p dependiente: " + p_value)
     }
-    salida90 = "La diferencia no es significativa al 90%"
-    salida95 = "La diferencia no es significativa al 95%"
-    salida99 = "La diferencia no es significativa al 99%"
+    salida90 = "La diferencia no es significativa al 10%"
+    salida95 = "La diferencia no es significativa al 5%"
+    salida99 = "La diferencia no es significativa al 1%"
 
 
     console.log("p valor= " + p_value);
@@ -340,15 +340,15 @@
     console.log(b);
 
     if (p_value < 0.1 || p_value > 0.9) {
-      salida90 = "Hay diferencias significativas al 90%"
+      salida90 = "Hay diferencias significativas al 10%"
     }
 
     if (p_value < 0.05 || p_value > 0.95) {
-      salida95 = "Hay diferencias significativas al 95%"
+      salida95 = "Hay diferencias significativas al 5%"
     }
 
     if (p_value < 0.01 || p_value > 0.99) {
-      salida99 = "Hay diferencias significativas al 99%"
+      salida99 = "Hay diferencias significativas al 1%"
     }
 
 

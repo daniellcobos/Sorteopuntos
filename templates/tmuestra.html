@@ -1,257 +1,343 @@
 {% extends "layout.html" %}
 {% block title %}Cálculo del Tamaño de una muestra {% endblock %}
 {% block head %}
-{{ super() }}  
+{{ super() }}
 {% endblock %}
 {% block content %}
 <script src="https://d3js.org/d3.v4.js"></script>
 <section class="portfolio-block block-intro">
-    <h1>Cálculo del Tamaño de una muestra</h1>
+  <h1>Cálculo del Tamaño de una muestra</h1>
 
-    <form id="calc" name="calc">
+  <form id="calc" name="calc" class="calc">
+    <table class="table">
+      <tr>
+        <td>Intervalo de Confianza:</td>
+        <td>
+          <label class="radio-inline"><input checked name="ConLevBut" onclick="ConLevButF1(this.form)" type="radio"
+              value="1"> 95%</label>
+          <label class="radio-inline"><input name="ConLevBut" onclick="ConLevButF2(this.form)" type="radio" value="2">
+            99%</label>
+        </td>
+      </tr>
+
+      <tr>
+        <td>Margen de Error%:</td>
+        <td><input name="box" type="text" value="5"></td>
+      </tr>
+
+      <tr>
+        <td>Tamaño de la Población*:</td>
+        <td><input name="popbox" onkeyup="this.value=iVal(this.value)" type="text" value="0"></td>
+      </tr>
+
+      <tr>
+        <td><input class="btn btn-primary" name="Calculate" onclick="to(this.form)" type="button" value="Calcular"></td>
+        <td><input class="btn btn-default" name="Clear" onclick="cler(this.form,'')" type="button" value=" Limpiar ">
+        </td>
+      </tr>
+
+      <tr>
+        <td>Tamaño de la muestra:</td>
+        <td><input name="ssbox" type="text"></td>
+      </tr>
+    </table>
+    <a>*Puede dejar 0 si la poblacion es infinita o mayor a 100 mil</a>
+  </form>
+  </div>
+</section>
+<main class="page project-page">
+  <section class="portfolio-block project">
+    <div class="container">
+      <div class="row">
+        <h3>Funcion de tamaño muestral </h3>
+        <p> Esta funcion sigue una curva logaritmica, que se manifiesta en la asintota presentada en la grafica
+          inferior </p>
+        <p> Con un intervalo de confianza y margen de error del 5%, pobra observar que la muestra del calculo tambien
+          se acerca a esta curva </p>
+      </div>
+      <div class="row">
+        <div class="col-3">
+        </div>
+        <div class="col-6">
+          <div id="grafica" style=" height:500px; width:900px"></div>
+          <div id="legend">
+            <p id="curva"> ━━ Curva de tamaño</p>
+            <p id='tammuestra'> ━━ Tamaño de muestra calculado</p>
+          </div>
+        </div>
+        <div class="col-3">
+        </div>
+      </div>
+    </div>
+    </div>
+  </section>
+  <section class="portfolio-block block-intro">
+    <h1>Cálculo del error segun el tamaño de una muestra</h1>
+
+    <form id="calc2" name="calc2" class="calc">
       <table class="table">
         <tr>
           <td>Intervalo de Confianza:</td>
           <td>
-          	<label class="radio-inline"><input checked name="ConLevBut" onclick="ConLevButF1(this.form)" type="radio" value="1"> 95%</label>
-          	<label class="radio-inline"><input name="ConLevBut" onclick="ConLevButF2(this.form)" type="radio" value="2"> 99%</label>
+            <label class="radio-inline"><input checked name="ConLevBut2" onclick="ConLevButF1(this.form)" type="radio"
+                value="1"> 95%</label>
+            <label class="radio-inline"><input name="ConLevBut2" onclick="ConLevButF2(this.form)" type="radio"
+                value="2">
+              99%</label>
           </td>
         </tr>
 
         <tr>
-          <td>Margen de Error%:</td>
-          <td><input name="box" type="text" value="5"></td>
+          <td>Tamaño de la muestra:</td>
+          <td><input name="tmbox" type="text" value="50"></td>
         </tr>
 
         <tr>
           <td>Tamaño de la Población*:</td>
-          <td><input name="popbox" onkeyup="this.value=iVal(this.value)" type="text" value="0"></td>          
+          <td><input name="popbox2" onkeyup="this.value=iVal(this.value)" type="text" value="100"></td>
         </tr>
 
         <tr>
-          <td><input class="btn btn-primary" name="Calculate" onclick="to(this.form)" type="button" value="Calcular"></td>
-          <td><input class="btn btn-default" name="Clear" onclick="cler(this.form,'')" type="button" value=" Limpiar "></td>
+          <td><input class="btn btn-primary" name="Calculate" onclick="to2(this.form)" type="button" value="Calcular">
+          </td>
+          <td><input class="btn btn-default" name="Clear" onclick="cler(this.form,'')" type="button" value=" Limpiar ">
+          </td>
         </tr>
 
         <tr>
-          <td>Tamaño de la muestra:</td>
-          <td><input name="ssbox" type="text"></td>
+          <td> Margen de Error%: </td>
+          <td><input name="mebox" type="text"></td>
         </tr>
       </table>
-      <a>*Puede dejar 0 si la poblacion es infinita o mayor a 100 mil</a>    
+      <a>*Puede dejar 0 si la poblacion es infinita o mayor a 100 mil</a>
     </form>
+    </div>
+  </section>
 
-  
-    
-  </div>
-  <main class="page project-page">
-    <section class="portfolio-block project">
-      <div class="container">
-        <div class="row">
-          <h3>Funcion de tamaño muestral </h3>
-          <p> Esta funcion sigue una curva logaritmica, que se manifiesta en la asintota presentada en la grafica inferior </p>
-          <p> Con un intervalo de confianza y margen de error del 5%, pobra observar que la muestra del calculo tambien se acerca a esta curva </p>
-        </div>
-        <div class="row">
-          <div class="col-8" style=" height:500px; width:700px">
-            <div id="grafica" ></div>
-          </div>
-          <div class="col" style=" height:200px; width:100px">
-            <div id="legend" >
-              
-              <ul>
-                <p id="curva"> ━━ Curva de tamaño</p>
-                <p id='tammuestra'> ━━ Tamaño de muestra calculado</p>
-              </ul>
-            </div>
-          </div>
-        </div>
-        
-          </div>
-        </div>
-     
-    </section>
-  </main>
+</main>
 
 </section>
 
 <script>
-    conInt = 0;
-    conLev=1;
-    zVal=1.96;
-    zValC=3.8416;
-    ss=0;
-    pop=0;
-    perc=0;
-    pf = 0;
-    
-    function to(obj) {
-    
-      if (obj.box.value == "") {
-        conInt=0
+  conInt = 0;
+  conLev = 1;
+  zVal = 1.96;
+  zValC = 3.8416;
+  ss = 0;
+  pop = 0;
+  perc = 0;
+  pf = 0;
+
+  function to(obj) {
+
+    if (obj.box.value == "") {
+      conInt = 0
+    }
+    else {
+      conInt = eval(obj.box.value)
+    }
+
+    if (obj.popbox.value == "") {
+      pop = 0
+    }
+    else {
+      pop = eval(obj.popbox.value)
+    }
+
+    if (conInt == 0) {
+      alert("You must enter a confidence interval between .1 and 50.")
+    }
+    else {
+      if (pop == 0) {
+        ss = ((zVal * zVal) * 0.25) / ((conInt / 100) * (conInt / 100))
       }
       else {
-        conInt = eval(obj.box.value)
+        ss = ((zVal * zVal) * 0.25) / ((conInt / 100) * (conInt / 100));
+        ss = ss / (1 + ((ss - 1) / pop))
       }
+
+      obj.ssbox.value = parseInt(ss + .5)
+
+    }
+    addPoint(pop, ss)
+
+  }
+  function to2(obj) {
+   let tm = 0
+   let pop2 = 0
+   let me = 0
+    if (obj.tmbox.value == "") {
+      tm = 0
+    }
+    else {
+      tm = eval(obj.tmbox.value)
+    }
+
+    if (obj.popbox2.value == "") {
+      pop2 = 0
+    }
+    else {
+      pop2 = eval(obj.popbox2.value)
+    }
+
+    if (tm == 0) {
+      alert("Debe ingresar un tamano de muestra")
+    }
+    else {
     
-      if (obj.popbox.value == "") { 
-         pop=0
-       }
+      if (pop2 == 0) {
+        me = Math.sqrt(((zVal*zVal)/(4*tm)))
+      }
       else {
-         pop = eval(obj.popbox.value)
-      }
-    
-      if (conInt == 0) {
-          alert("You must enter a confidence interval between .1 and 50.")
-       }
-      else {  
-         if (pop == 0) {
-            ss = ((zVal *zVal) * 0.25) / ((conInt / 100) *(conInt / 100))
-         }
-         else {
-           ss = ((zVal *zVal) * 0.25) / ((conInt / 100) *(conInt / 100));
-           ss=ss/(1+(ss-1)/pop)
-         }
-            
-         obj.ssbox.value=parseInt(ss+.5)
-    
-      }
-     addPoint(pop,ss)
      
+        mestep11 = (pop2*(zVal*zVal))
+        mestep12 = ((4*tm*pop2)-(4*tm))
+        mestep1 = (mestep11/mestep12)
+        mestep2 = ((zVal*zVal)/((4*pop2)-4))
+        me = Math.sqrt(mestep1-mestep2)
+
+   
+      }
+
+      obj.mebox.value = Math.round(me*100) 
+
     }
     
-    function ConLevButF1(obj){
-       zVal=1.96
-    }
-    function ConLevButF2(obj){
-       zVal=2.58
-    }
-    function ConLevButFC1(obj){
-       zValC=3.8416 ;
-    }
-    function ConLevButFC2(obj){
-       zValC=6.6564 ;
-    }
-    function cler(obj, string) {
-      obj.box.value = string;
-      obj.popbox.value = string;
-      obj.ssbox.value = string;
-    }    
-   
-  
+
+  }
+
+  function ConLevButF1(obj) {
+    zVal = 1.96
+  }
+  function ConLevButF2(obj) {
+    zVal = 2.58
+  }
+  function ConLevButFC1(obj) {
+    zValC = 3.8416;
+  }
+  function ConLevButFC2(obj) {
+    zValC = 6.6564;
+  }
+  function cler(obj, string) {
+    obj.box.value = string;
+    obj.popbox.value = string;
+    obj.ssbox.value = string;
+  }
+
+
 
 
   // set the dimensions and margins of the graph
-  var margin = {top: 10, right: 30, bottom: 30, left: 60},
-      width = 600 - margin.left - margin.right,
-      height = 480 - margin.top - margin.bottom;
-  const INNER_WIDTH  =  width ;
-  const INNER_HEIGHT = height ;
-  
+  var margin = { top: 10, right: 30, bottom: 30, left: 60 },
+    width = 600 - margin.left - margin.right,
+    height = 480 - margin.top - margin.bottom;
+  const INNER_WIDTH = width;
+  const INNER_HEIGHT = height;
+
   // append the svg object to the body of the page
   var svg = d3.select("#grafica")
     .append("svg")
-      .attr("width", width + margin.left + margin.right)
-      .attr("height", height + margin.top + margin.bottom)
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
     .append("g")
-      .attr("transform",
-            "translate(" + margin.left + "," + margin.top + ")");
-  
+    .attr("transform",
+      "translate(" + margin.left + "," + margin.top + ")");
+
   //Read the data
- const dataset = d3.csv("{{ url_for('static', filename='tm.csv') }}")
- const x = d3.scaleLinear()
-  .domain([0, 10000])
-  .range([ 0, width ]);
+  const dataset = d3.csv("{{ url_for('static', filename='tm.csv') }}")
+  const x = d3.scaleLinear()
+    .domain([0, 10000])
+    .range([0, width]);
 
 
-// Add Y axis
-const y = d3.scaleLinear()
-  .domain([0, 450])
-  .range([ height, 0 ]);
+  // Add Y axis
+  const y = d3.scaleLinear()
+    .domain([0, 450])
+    .range([height, 0]);
 
-    const xAxisGrid = d3.axisBottom(x).tickSize(-height).tickFormat('').ticks(10);
-    const yAxisGrid = d3.axisLeft(y).tickSize(-width).tickFormat('').ticks(10);
+  const xAxisGrid = d3.axisBottom(x).tickSize(-height).tickFormat('').ticks(10);
+  const yAxisGrid = d3.axisLeft(y).tickSize(-width).tickFormat('').ticks(10);
 
-  d3.csv("{{ url_for('static', filename='tm.csv') }}",  function(data) {
- console.log(data)
+  d3.csv("{{ url_for('static', filename='tm.csv') }}", function (data) {
+    console.log(data)
 
-const x = d3.scaleLinear()
-  .domain([0, d3.max(data, function(d) { return +d.Poblacion; })])
-  .range([ 0, width ]);
-svg.append("g")
-  .attr("transform", `translate(0, ${height})`)
-  .call(d3.axisBottom(x));
-  svg.append('g')
-  .attr('class', 'x axis-grid')
-  .attr('transform', 'translate(0,' + INNER_HEIGHT + ')')
-  .call(xAxisGrid);
-svg.append('g')
-  .attr('class', 'y axis-grid')
-  .call(yAxisGrid);
+    const x = d3.scaleLinear()
+      .domain([0, d3.max(data, function (d) { return +d.Poblacion; })])
+      .range([0, width]);
+    svg.append("g")
+      .attr("transform", `translate(0, ${height})`)
+      .call(d3.axisBottom(x));
+    svg.append('g')
+      .attr('class', 'x axis-grid')
+      .attr('transform', 'translate(0,' + INNER_HEIGHT + ')')
+      .call(xAxisGrid);
+    svg.append('g')
+      .attr('class', 'y axis-grid')
+      .call(yAxisGrid);
 
 
-// Add Y axis
-const y = d3.scaleLinear()
-  .domain([0, d3.max(data, function(d) { return +d.Muestra + 69; })])
-  .range([ height, 0 ]);
-svg.append("g")
-  .call(d3.axisLeft(y));
+    // Add Y axis
+    const y = d3.scaleLinear()
+      .domain([0, d3.max(data, function (d) { return +d.Muestra + 69; })])
+      .range([height, 0]);
+    svg.append("g")
+      .call(d3.axisLeft(y));
 
-// Add the line
-svg.append("path")
-  .datum(data)
-  .attr("fill", "none")
-  .attr("stroke", "steelblue")
-  .attr("stroke-width", 1.5)
-  .attr("d", d3.line()
-    .x(function(d) { return x(d.Poblacion) })
-    .y(function(d) { return y(d.Muestra) })
-    )
-  svg.selectAll(".circle")
-    .data(data)
-    .enter()
-    .append("circle")
+    // Add the line
+    svg.append("path")
+      .datum(data)
+      .attr("fill", "none")
+      .attr("stroke", "steelblue")
+      .attr("stroke-width", 1.5)
+      .attr("d", d3.line()
+        .x(function (d) { return x(d.Poblacion) })
+        .y(function (d) { return y(d.Muestra) })
+      )
+    svg.selectAll(".circle")
+      .data(data)
+      .enter()
+      .append("circle")
       .attr("class", "circle")
       .attr("r", "4") // radius
-      .attr("cx", d=> x(d.Poblacion))   // center x passing through your xScale
-      .attr("cy", d=> y(d.Muestra))   // center y through your yScale
+      .attr("cx", d => x(d.Poblacion))   // center x passing through your xScale
+      .attr("cy", d => y(d.Muestra))   // center y through your yScale
       .style("fill", "steelblue");
 
   })
 
-  const addPoint = (pob,mus) => {
-    
-    point = [{x: pob, y: mus}]
-    let circles = svg.selectAll("circle")
-   circles = circles.data(point).enter().append("circle").merge(circles)
-    .attr("cx", d=> x(d.x))
-    .attr("cy", d=> y(d.y))
-    .attr("r", "3")
-    .style("fill", "#Bd2292");
-    svg.selectAll(".intercept").remove();
-   svg.append("line")
-   .datum(point)
-   .attr("x1", d=> x(d[0].x))  //<<== change your code here
-  .attr("y1", y(0))
-  .attr("x2", d=> x(d[0].x))  //<<== and here
-  .attr("y2",d=> y(d[0].y))
-  .attr("class", "intercept")
-  .style("stroke-width", 1.3)
-  .style("stroke", "#Bd2292")
-  .style("fill", "none");
-  svg.append("line")
-   .datum(point)
-   .attr("x1", x(0))  //<<== change your code here
-  .attr("y1", d=> y(d[0].y))
-  .attr("x2", d=> x(d[0].x))  //<<== and here
-  .attr("y2",d=> y(d[0].y))
-  .attr("class", "intercept")
-  .style("stroke-width", 1.3)
-  .style("stroke", "#Bd2292")
-  .style("fill", "none");
-   
-  
-  }  
+  const addPoint = (pob, mus) => {
 
-  </script>
+    point = [{ x: pob, y: mus }]
+    let circles = svg.selectAll("circle")
+    circles = circles.data(point).enter().append("circle").merge(circles)
+      .attr("cx", d => x(d.x))
+      .attr("cy", d => y(d.y))
+      .attr("r", "3")
+      .style("fill", "#Bd2292");
+    svg.selectAll(".intercept").remove();
+    svg.append("line")
+      .datum(point)
+      .attr("x1", d => x(d[0].x))  //<<== change your code here
+      .attr("y1", y(0))
+      .attr("x2", d => x(d[0].x))  //<<== and here
+      .attr("y2", d => y(d[0].y))
+      .attr("class", "intercept")
+      .style("stroke-width", 1.3)
+      .style("stroke", "#Bd2292")
+      .style("fill", "none");
+    svg.append("line")
+      .datum(point)
+      .attr("x1", x(0))  //<<== change your code here
+      .attr("y1", d => y(d[0].y))
+      .attr("x2", d => x(d[0].x))  //<<== and here
+      .attr("y2", d => y(d[0].y))
+      .attr("class", "intercept")
+      .style("stroke-width", 1.3)
+      .style("stroke", "#Bd2292")
+      .style("fill", "none");
+
+
+  }
+
+</script>
 {% endblock %}

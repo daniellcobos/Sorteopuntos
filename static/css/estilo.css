@@ -5,7 +5,7 @@
     font-family:'Century Gothic','Futura','Didact Gothic',san-serif;
     font-size:small;
 }
-#calc{
+.calc{
     max-width: 750px;
 }
 .bg-custom-2 {
@@ -30,12 +30,21 @@ svg{
   }
 #legend{
     padding-top: 1rem;
+    display: flex;
+
+  
 }
 #curva {
     color:steelblue;
     font-weight: bold;
+    margin-left: 20px;
 }
 #tammuestra{
     color: #Bd2292 ; 
     font-weight: bold;
+    margin-left: 20px;
+}
+.neural{
+    width: 800px;
+    height: 600px;
 }

@@ -38,7 +38,8 @@ app.register_blueprint(main_blueprint)
 from .synapsis import synapsis as synapsis_blueprint
 app.register_blueprint(synapsis_blueprint)
 
-
+from .neural import neural as neural_blueprint
+app.register_blueprint(neural_blueprint)
       
 if __name__ == "__main__":
     app.run(host='0.0.0.0',debug=True)

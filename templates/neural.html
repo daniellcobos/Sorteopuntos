@@ -1,0 +1,12 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="portfolio-block block-intro">
+    <h2> Red Neuronal de Identificacion de objetos</h2>
+    <h4> Ejemplo de Datos de Entrenamiento</h4>
+    <img class="neural" src="{{ url_for('static', filename='pruebas.png') }}"/>
+    <h4> Resultados de la red </h4>
+    <img  class="neural" src="{{ url_for('static', filename='new_plot.png') }}"/>
+</div>
+    
+{% endblock %}
