@@ -1,4 +1,4 @@
-from flask import Blueprint,render_template
+from flask import Blueprint,render_template,request
 import tensorflow as tf
 import tensorflow_datasets as tfds
 import matplotlib.pyplot as plt
@@ -38,9 +38,9 @@ datos_pruebas = datos_pruebas.cache()
 
     #Crear el modelo
 modelo = tf.keras.Sequential([
-tf.keras.layers.Flatten(input_shape=(28,28,1)), #1 - blanco y negro
-tf.keras.layers.Dense(60, activation=tf.nn.relu),
-tf.keras.layers.Dense(60, activation=tf.nn.relu),
+tf.keras.layers.Flatten(input_shape=(28,28)), #1 - blanco y negro
+tf.keras.layers.Dense(70, activation=tf.nn.relu),
+tf.keras.layers.Dense(70, activation=tf.nn.relu),
 tf.keras.layers.Dense(10, activation=tf.nn.softmax) #Para redes de clasificacion
     ])
 
@@ -78,7 +78,7 @@ historial = modelo
 @neural.route('/neural')
 def neuralnet():
     #Entrenar
-    historial = modelo.fit(datos_entrenamiento, epochs=5, steps_per_epoch= math.ceil(num_ej_entrenamiento/TAMANO_LOTE))
+    historial = modelo.fit(datos_entrenamiento, epochs=7, steps_per_epoch= math.ceil(num_ej_entrenamiento/TAMANO_LOTE))
 
     for imagenes_prueba, etiquetas_prueba in datos_pruebas.take(1):
         imagenes_prueba = imagenes_prueba.numpy()
@@ -131,7 +131,69 @@ def neuralnet():
     #Probar una imagen suelta
     imagen = imagenes_prueba[4] #AL ser la variable imagenes_prueba solo tiene lo que se le puso en el bloque anterior heheh
     imagen = np.array([imagen])
+   
     prediccion = modelo.predict(imagen)
     plt.savefig('static/new_plot.png')
     print("Prediccion: " + nombres_clases[np.argmax(prediccion[0])])
     return render_template("neural.html")
+
+
+from PIL import Image
+from io import BytesIO
+import cv2
+
+
+def input_prepare(img):
+    img = np.asarray(img)              # convert to array 
+    img = cv2.resize(img, (28, 28 ))   # resize to target shape 
+    img = cv2.bitwise_not(img)         # [optional] my input was white bg, I turned it to black - {bitwise_not} turns 1's into 0's and 0's into 1's
+    img = img / 255                    # normalize 
+    
+    img = img.reshape(1, 28, 28)          # reshaping 
+    return img 
+
+
+def makeOutro(imgplt,prediccion,porcentaje):
+        plt.figure()
+        plt.imshow(imgplt, cmap=plt.cm.binary)
+        plt.colorbar()
+        plt.grid(False)
+      
+
+        etiqueta_prediccion = np.argmax(prediccion)
+        
+        plt.xlabel(str(nombres_clases[etiqueta_prediccion]) + " " + "{:.2f}".format(porcentaje) + "%" )
+        plt.savefig('static/outro.png')
+
+
+@neural.route('/neural', methods =['POST'])
+def neuralImage():
+    try:
+        # check if the post request has the file part
+        file = request.files['myImage']
+        file = file.read()
+        img = Image.open(BytesIO(file))
+        imgplt = np.array(img.resize((28, 28 ), Image.ANTIALIAS))
+        plt.figure()
+        plt.imshow(imgplt, cmap=plt.cm.binary)
+        plt.colorbar()
+        plt.grid(False)
+        plt.savefig('static/intro.png')
+        
+   
+        img = img.convert("L")
+        img = input_prepare(img)
+       
+     
+        prediccion = modelo.predict(img)
+        porcentaje = 100*np.max(prediccion)
+        makeOutro(imgplt,prediccion,porcentaje)
+        print(prediccion)
+        
+        print("Prediccion: " + nombres_clases[np.argmax(prediccion[0])])
+        return render_template("neuralimage.html")
+       
+    except Exception as err:
+        print("Error occurred")
+        print(err)
+        return("Error, image not received.")

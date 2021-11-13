@@ -2,13 +2,13 @@
 
 {% block content %}
 <div class="portfolio-block block-intro">
-    <h2> Red Neuronal de Identificacion de objetos</h2>
-    <h4> Ejemplo de Datos de Entrenamiento</h4>
-    <img class="neural" src="{{ url_for('static', filename='pruebas.png') }}"/>
-    <h4> Resultados de la red </h4>
-    <img  class="neural" src="{{ url_for('static', filename='new_plot.png') }}"/>
+    <h2> Clasificacion de Imagenes</h2>
+    <h4> Dato Ingresado</h4>
+    <img src="{{ url_for('static', filename='intro.png') }}"/>
+    <h4> Resultados de la Clasificacion </h4>
+    <img  src="{{ url_for('static', filename='outro.png') }}"/>
     <form action="{{ url_for('neural.neuralImage') }}" method="POST" enctype="multipart/form-data">
-        Select image to upload:
+        Usa otra imagen:
         <input type="file" name="myImage" id="fileToUpload">
         <input type="submit" value="Upload Image" name="submit">
     </form>
