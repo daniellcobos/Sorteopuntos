@@ -1,17 +1,49 @@
 {% extends "layout.html" %}
 
 {% block content %}
+
 <div class="portfolio-block block-intro">
-    <h2> Red Neuronal de Identificacion de objetos</h2>
-    <h4> Ejemplo de Datos de Entrenamiento</h4>
-    <img class="neural" src="{{ url_for('static', filename='pruebas.png') }}"/>
-    <h4> Resultados de la red </h4>
-    <img  class="neural" src="{{ url_for('static', filename='new_plot.png') }}"/>
-    <form action="{{ url_for('neural.neuralImage') }}" method="POST" enctype="multipart/form-data">
-        Select image to upload:
-        <input type="file" name="myImage" id="fileToUpload">
-        <input type="submit" value="Upload Image" name="submit">
-    </form>
+    <h2> Redes Neuronales para Clasificacion y Deteccion de Imagenes</h2>
+    
+        <div class="container mt-5">
+            <h3 class="title">Clasificacion De Imagenes, Prendas de Ropa</h3>
+            <div class="row">
+                <form action="{{ url_for('neural.neuralImage') }}" method="POST" enctype="multipart/form-data">
+                    <div class="form-group" >
+                    <input  class="form-control-file" type="file" name="myImage" id="fileToUpload">
+                    </div>
+                    <div class="form-group">
+                    <input class="btn btn-primary mb-2" type="submit" value="Subir Imagen" name="submit">
+                    </div>
+                </form>
+            </div>
+            <div class="row">
+                <h3 class="title">Clasificacion De Imagenes, Gatos vs Perros</h3>
+            <form  class="form-group"action="{{ url_for('neural.neuralCats') }}" method="POST" enctype="multipart/form-data">
+                <div class="form-group" >
+                <input class="form-control-file" type="file" name="myImage" id="fileToUpload"><br>
+                </div>
+                <div class="form-group" >
+                <input class="btn btn-primary mb-2" type="submit" value="Subir Imagen" name="submit">
+                </div>
+            </form>
+            </div>
+            <div class="row">
+                <h3 class="title">Deteccion de Objetos en Una Imagen Usando Tensorflow</h3>
+                <form class="form-group" action="{{ url_for('neuralDetector.detector') }}" method="POST" enctype="multipart/form-data">
+                    <div class="form-group" >
+                    <input class="form-control-file" type="file" name="myImage" id="fileToUpload"><br>
+                    </div>
+                    <div class="form-group" >
+                    <input class="btn btn-primary mb-2" type="submit" value="Subir Imagen" name="submit">
+                    </div>
+                </form>
+            </div>
+           
+        </div>
+  
+   
+  
 </div>
     
 {% endblock %}

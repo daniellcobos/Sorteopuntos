@@ -40,6 +40,9 @@ app.register_blueprint(synapsis_blueprint)
 
 from .neural import neural as neural_blueprint
 app.register_blueprint(neural_blueprint)
-      
+
+from .neuralDetector import neuralDetector as neurald_blueprint
+app.register_blueprint(neurald_blueprint)
+        
 if __name__ == "__main__":
     app.run(host='0.0.0.0',debug=True)

@@ -3,15 +3,17 @@
 {% block content %}
 <div class="portfolio-block block-intro">
     <h2> Clasificacion de Imagenes</h2>
-    <h4> Dato Ingresado</h4>
+    <h4> Imagen Ingresada</h4>
     <img src="{{ url_for('static', filename='intro.png') }}"/>
-    <h4> Resultados de la Clasificacion </h4>
+    <h4> Ejemplo de Datos de Entrenamiento</h4>
+    <img class="neural" src="{{ url_for('static', filename='pruebas.png') }}"/>
+    <h4> Resultados de la Clasificacion Individual</h4>
     <img  src="{{ url_for('static', filename='outro.png') }}"/>
     <form action="{{ url_for('neural.neuralImage') }}" method="POST" enctype="multipart/form-data">
-        Usa otra imagen:
-        <input type="file" name="myImage" id="fileToUpload">
-        <input type="submit" value="Upload Image" name="submit">
-    </form>
+        <label for="fileToUpload">Usa otra imagen:</label> 
+        <input  class="form-control-file" type="file" name="myImage" id="fileToUpload"><br>
+        <input  class="btn btn-primary mb-2" type="submit" value="Subir Imagen" name="submit">
+
 </div>
     
 {% endblock %}

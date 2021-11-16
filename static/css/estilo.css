@@ -45,6 +45,9 @@ svg{
     margin-left: 20px;
 }
 .neural{
-    width: 800px;
+    width: 900px;
     height: 600px;
+}
+.title{
+    margin: 10px;
 }

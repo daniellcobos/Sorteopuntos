@@ -1,0 +1,16 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="portfolio-block block-intro">
+    <h2> Deteccion de Objetos</h2>
+    <h4>Resultados</h4>
+    <img class="neural" src="{{ url_for('static', filename='detected.png') }}"/>
+
+    <form action="{{ url_for('neuralDetector.detector') }}" method="POST" enctype="multipart/form-data">
+        <label for="fileToUpload">Usa otra imagen:</label>
+        <input  class="form-control-file" type="file" name="myImage" id="fileToUpload"><br>
+        <input  class="btn btn-primary mb-2" type="submit" value="Subir Imagen" name="submit">
+    </form>
+</div>
+    
+{% endblock %}
